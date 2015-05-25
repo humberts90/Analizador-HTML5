@@ -1,4 +1,4 @@
-
+### Englisg
 
 This application consists of a tool for the analysis (lexical, syntactical and semantic) of HTML5 structures. The application was done purely in JavaScript, so it will not require an Internet connection to be used.
 
@@ -52,6 +52,8 @@ Requests to collaborate will be welcome. The project will be extended to a new b
 **Email:** [humberts90@gmail.com](humberts90@gmail.com)
 
 -------------------------------------------------------------------------------
+
+### Español
 
 
 Esta aplicación consiste en una herramienta para el análisis (tanto léxico, sintáctico, como semántico) de estructuras HTML5. La aplicación fue realizada puramente en JavaScript, por lo que no necesitará conexión a Internet para ser utilizada.
