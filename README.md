@@ -47,7 +47,7 @@ Requests to collaborate will be welcome. The project will be extended to a new b
 **More information will be provided in the repository's wiki.**
 
 
-**## You can contact me at:**
+## ** You can contact me at:**
 
 **Email:** [humberts90@gmail.com](mailto:humberts90@gmail.com)
 
