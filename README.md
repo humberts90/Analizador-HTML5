@@ -1,4 +1,4 @@
-### Englisg
+### English
 
 This application consists of a tool for the analysis (lexical, syntactical and semantic) of HTML5 structures. The application was done purely in JavaScript, so it will not require an Internet connection to be used.
 
