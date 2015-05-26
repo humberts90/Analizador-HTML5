@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang = "es">
+<head>
+<title>
+</title>
+</head>
+
+<body>
+<main>
+<nav>
+<ul>
+<li><a href="prueba.html"><em></em></a></li>
+<li><a href="prueba.html"><strong></strong><b></b></a></li>
+</ul>
+</nav>
+
+<hr>
+
+<q></q>
+<abbr title="Prueba de HTML5"></abbr>
+<data value="UPC:022014640201"></data>
+<time datetime="2011-11-12"></time>
+
+ <ins></ins> 
+
+<del cite="/edits/r192" datetime="2011-05-02 14:23Z"></del>
+
+<img src="prueba.gif" width="15" height="15" alt="">
+
+<iframe src="http://ads.example.com/?customerid=923513721&amp;format=banner"
+        width="468" height="60"></iframe>
+<embed src="catgame.swf">
+
+<figure>
+ <object data="clock.html"></object>
+ <figcaption></figcaption>
+</figure>
+
+ <param name="o3d_features" value="FloatingPointTextures">
+
+
+<video src="brave.webm">
+<track kind="subtitles" src="brave.en.vtt" srclang="en" label="English">
+<track kind="captions" src="brave.en.hoh.vtt" srclang=en label="English for the Hard of Hearing">
+<track kind="subtitles" src="brave.fr.vtt" srclang=fr lang=fr label="Français">
+<track kind="subtitles" src="brave.de.vtt" srclang=de lang=de label="Deutsch">
+</video>
+
+
+ <audio controls="true">
+  <source src="horse.ogg" type="audio/ogg">
+  <source src="horse.mp3" type="audio/mpeg">
+</audio> 
+
+<MAP NAME="NAV">
+ 
+ </MAP>
+ <area shape=poly coords="325,25,262,125,388,125" href="blue.html" alt="Blue triangle.">
+
+</main>
+
+<footer>
+<small><s><i></i></s></small>
+<cite></cite>
+</footer>
+
+
+</body>
+
+</html>

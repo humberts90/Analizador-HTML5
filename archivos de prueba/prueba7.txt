@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang = "es">
+<head>
+<title>
+</title>
+</head>
+
+<body>
+<main>
+<nav>
+<ul>
+<li><a href="prueba.html"><em></em></a></li>
+<li><a href="prueba.html"><strong></strong><b></b></a></li>
+</ul>
+</nav>
+
+<hr>
+
+<q></q>
+<abbr title="Prueba de HTML5"></abbr>
+<data value="UPC:022014640201"></data>
+<time datetime="2011-11-12"></time>
+<code></code>
+
+<kbd></kbd>
+
+<dfn></dfn>
+<var></var>
+<samp></samp>
+
+<sub></sub>
+<sup></sup>
+</main>
+
+<footer>
+<small><s><i></i></s></small>
+<cite></cite>
+</footer>
+
+
+</body>
+
+</html>

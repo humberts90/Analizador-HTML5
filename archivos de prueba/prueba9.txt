@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang = "es">
+<head>
+<title>
+</title>
+</head>
+
+<body>
+
+ <h1></h1>
+ <table>
+  <colgroup><col>  </colgroup>
+  <colgroup><col>  </colgroup>
+<colgroup><col>  </colgroup>
+</table>
+
+
+
+
+<caption>
+<p></p>
+</caption>
+
+
+ <table>
+  <colgroup>
+    <col span ="2" style="background-color:red">
+
+  </colgroup>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table> 
+
+
+ <table>
+  <thead>
+  <tr>
+     <th></th>
+     <th></th>
+  </tr>
+  </thead>
+  <tfoot>
+  <tr>
+      <td></td>
+      <td></td>
+  </tr>
+  </tfoot>
+  <tbody>
+  <tr>
+     <td></td>
+     <td></td>
+  </tr>
+  <tr>
+      <td></td>
+      <td></td>
+  </tr>
+  </tbody>
+</table> 
+
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "analizador",
+  "title": "analizador",
+  "id": "",
+  "description": "Analizador HTML5",
+  "author": "Humberto Soler S.",
+  "license": "",
+  "version": "0.1.0",
+  "main": "lib/main.js"
+}

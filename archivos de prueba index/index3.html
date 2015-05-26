@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title> Documento de Prueba </title>
+		<script src="./scriptHTML5.js"></script>
+		<script src="./parseHTML5.js"></script>
+	</head>
+	<body>
+
+		<h1>Titulo de ejempo</h1>
+		<p >Caso de prueba </p>
+
+		<frame></frame>
+
+		<hgroup></hgroup>
+
+		<nobr></nobr>
+
+
+		<script>			 
+		console.time("analizador");
+		    var objAST = analizarHTML(parser);
+		    console.log(objAST);
+		 console.timeEnd("analizador")
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang = "es">
+<head>
+<title>
+</title>
+</head>
+
+<body>
+
+
+<canvas id="myCanvas='hola'"></canvas>
+  <template id="row">
+  </template>
+
+
+<script src="game-engine.js"></script>
+
+ <noscript>
+<input type="submit" value="Search...">
+ </noscript>
+</body>
+
+</html>

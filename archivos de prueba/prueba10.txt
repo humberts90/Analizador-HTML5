@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang = "es">
+<head>
+<title>
+</title>
+</head>
+
+<body>
+<form action="http://www.google.com/search" method="get">
+ <label> 
+<input type="search" name="q">
+</label> 
+<input type="submit" value="Search...">
+</form>
+
+<form action="http://www.bing.com/search" method="get">
+
+
+<label> <input type="search" name="q"></label>
+<select name="unittype" >
+ <option value=""> </option>
+ <option value="1"> </option>
+ <option value="2"> </option>
+ <option value="3"> </option>
+ <option value="4"> </option>
+ <option value="5"> </option>
+</select>
+
+<datalist id="sexes">
+  <option value="Female"></option>
+  <option value="Male"></option>
+ </datalist>
+
+ <select name="c">
+   <optgroup label="8.01 Physics I: Classical Mechanics">
+    <option value="8.01.1"></option>
+    <option value="8.01.2"></option>
+    <option value="8.01.3"></option>
+</optgroup>
+   <optgroup label="8.02 Electricity and Magnestism">
+    <option value="8.02.1"></option>
+    <option value="8.02.2"></option>
+    <option value="8.02.3"></option>
+</optgroup>
+   <optgroup label="8.03 Physics III: Vibrations and Waves">
+    <option value="8.03.1"></option>
+    <option value="8.03.2"></option>
+    <option value="8.03.3"></option>
+</optgroup>
+  </select>
+
+
+<textarea cols=80 name=comments></textarea>
+
+<keygen name="key">
+
+<form onsubmit="return false" oninput="o.value = a.valueAsNumber + b.valueAsNumber">
+ <input name=a type=number step=any> 
+ <input name=b type=number step=any> 
+ <output name=o for="a b"></output>
+</form>
+<progress id="p" max=100></progress>
+<meter value=6 max=8></meter>
+
+<fieldset>
+ <legend></legend>
+</fieldset>
+ <input type="submit" value="Search...">
+</form>
+
+<button type="button">
+</button>
+
+</body>
+
+</html>

@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: funcParse.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: funcParse.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Sets up the JSON format for the AST tree. / Arma el formato JSON para el árbol AST.
+ * @param  {object} objEtiqueta - Receives the different parts of the tree. / Recibe las diferentes partes del árbol.
+ * @return {string} - JSON format of the tree set up. / Formato JSON del árbol armado.
+ */
+var aniNiveles = function (objEtiqueta) {
+ 
+    var ramas="";
+    var contCierre = 0;
+    var corcCierre="";
+    var etiqs = [];
+
+    for(var i=0; i&lt;objEtiqueta.length; i++){
+        if(objEtiqueta[i] !== "null" &amp;&amp; objEtiqueta[i] !== "")
+        etiqs.push(objEtiqueta[i]);
+    }
+
+    for(var i=0; i&lt;etiqs.length; i++){
+        if(i === 0){
+            ramas = ramas + etiqs[i];
+        }
+        else{
+            ramas = ramas+',{"h_der":['+etiqs[i];
+            contCierre++;
+        }
+    }
+
+    for(var i=0; i&lt;contCierre; i++)
+    corcCierre =  corcCierre + ']}';
+
+    if(ramas){
+        if(corcCierre)
+        ramas = ramas + corcCierre;
+    return ramas;
+    }
+
+    return "";
+};
+/**
+ * Sets up the branch corresponding to the last tag analyzed. / Arma la rama correspondiente a la ultima etiqueta analizada.
+ * @param  {string} nombre      - Name of the analyzed tag. / Nombre de la etiqueta analizada.
+ * @param  {array} atr         - Attributes pertaining to this tag. / Atributos pertenecientes a dicha etiqueta.
+ * @param  {object} objEtiqueta - Contains the child tags. / Contiene las etiquetas hijas.     
+ * @param  {number} linea       - Receives the tag opening line number. / Recibe el número de linea de apertura de la etiqueta.
+ * @param  {number} valCierre   - Receives the tag closing line number. / Recibe el número de linea de cierre de la etiqueta.
+ * @return {string}             - JSON format of the tag. / Formato JSON de la etiqueta.
+ */
+var ramas = function (nombre, atr, objEtiqueta, linea,valCierre) {
+   
+    var atrs = [];
+    var ids =[];
+    var str;
+    var cierre = true;
+    var strnumLi = [true,-1];
+   
+    if(/(&lt;\/otro>-[0-9]*)/gmi.test(valCierre))
+    {
+        cierre = false;
+        strnumLi = valCierre.split("-");
+    }
+
+    for(var i=0; i&lt;atr.length; i++){
+        if(atr[i] !== "null" &amp;&amp; atr[i] !== ""){
+            atrs.push(atr[i]);
+            str = atr[i].split(":");
+            ids.push(str[0].split("{").join(""));       
+        }
+    }
+
+    for(var i = 0; i &lt; ids.length; i++){
+        if(/^("data-)/gmi.test(ids[i]))
+        {
+            ids[i] = ids[i].split('"').join('');
+            var data = ids[i].split('-');
+            for(var j=0;j&lt;data.length; j++)
+            {
+                  if(ids[i] == ids[i].toUpperCase()) {
+                    advertencia.push("Atributo "+ids[i]+" solo debe contener minúsculas en la etiqueta "+nombre+" de la linea "+linea);
+                  }
+                  else if(ids[i] == ids[i].toLowerCase()) {
+                    
+                  }
+                  else {
+                    advertencia.push("Atributo "+ids[i]+" solo debe contener minúsculas en la etiqueta "+nombre+" de la linea "+linea);
+                  }
+            }
+        }
+
+   } 
+   
+    for(var i = 0; i &lt; ids.length; i++){
+        for(var j = 0; j &lt; ids.length; j++){
+            if( j > i &amp;&amp; ids[i] === ids[j]){
+                advertencia.push("Atributo "+ids[i]+" duplicado, no pueden haber dos atributos iguales en una misma etiqueta "+nombre+" en la linea "+linea);
+            }
+        }
+    }
+   
+    return '{"nombre":"'+nombre+'","atr":['+atrs+'],"linea":"'+linea+'","cierre":"'+cierre+'","linea_cierre":"'+strnumLi[1]+'","h_izq":['+objEtiqueta+']}';
+};
+/**
+ * Converts the attributes to JSON format. / Convierte los atributos a formato JSON.
+ * @param  {string} partIzq - Represents the name of the attribute. / Representa el nombre del atributo.
+ * @param  {string} partDe  - Represents the value of the attribute. / Representa el valor del atributo.
+ * @return {string}         - JSON format of the attribute. / Formato JSON del atributo.
+ */
+var atributos = function (partIzq, partDe) {
+
+    var valor = partIzq.split('"').join("").split(" ").join("")+'"'+':"'+partDe.split("=").join("").split('"').join("").split(",").join("").split(" ").join("").split("'").join("");
+    return '{"'+valor+'"}';
+};
+
+/**
+ * Returns the respective warnings depending on the tag. / Devuelve las respectivas advertencias dependiendo la etiqueta.
+ * @param  {object} arg - Contains the stack of the analysis. / Contiene la pila del análisis.
+ * @return {object}     - Tag, link and attribute for the respective warning. / Etiqueta, enlace y atributo para la respectiva advertencia.
+ */
+var advAtr = function(arg){
+    
+    var etiqueta = arg[arg.length-3];
+    var atr = arg[arg.length-1];
+    var link = "";
+
+    atr = atr.replace(/(([a-z0-9]*)(.*))/gmi,'$2');
+    etiqueta = etiqueta.split('&lt;').join('').split(' ').join('').toLowerCase();
+    
+    switch(etiqueta){
+        case 'html':
+        link = 'http://www.w3.org/TR/html5/semantics.html#the-html-element';
+        break;
+    case 'head':
+        link = 'http://www.w3.org/TR/html5/document-metadata.html#the-head-element';
+        break;
+    case 'title':
+        link = 'http://www.w3.org/TR/html5/document-metadata.html#the-title-element';
+        break;
+    case 'base':
+        link = 'http://www.w3.org/TR/html5/document-metadata.html#the-base-element';
+        break;
+    case 'link':
+        link = 'http://www.w3.org/TR/html5/document-metadata.html#the-link-element';
+        break;
+    case 'meta':
+        link = 'http://www.w3.org/TR/html5/document-metadata.html#the-meta-element';
+        break;
+    case 'style':
+        link = 'http://www.w3.org/TR/html5/document-metadata.html#the-style-element';
+        break;
+    case 'body':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-body-element';
+        break;
+    case 'article':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-article-element';
+        break;
+    case 'section':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-section-element';
+        break;
+    case 'nav':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-nav-element';
+        break;
+    case 'aside':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-aside-element';
+        break;
+    case 'h1':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements';
+        break;
+    case 'h2':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements';
+        break;
+    case 'h3':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements';
+        break;
+    case 'h4':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements';
+        break;
+    case 'h5':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements';
+        break;
+    case 'h6':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements';
+        break;
+    case 'header':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-header-element';
+        break;
+    case 'footer':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-footer-element';
+        break;
+    case 'address':
+        link = 'http://www.w3.org/TR/html5/sections.html#the-address-element';
+        break;
+    case 'p':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-p-element';
+        break;
+    case 'hr':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-hr-element';
+        break;
+    case 'pre':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-pre-element';
+        break;
+    case 'blockquote':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-blockquote-element';
+        break;
+    case 'ol':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-ol-element';
+        break;
+    case 'li':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-li-element';
+        break;
+    case 'ul':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-ul-element';
+        break;
+    case 'dl':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-dl-element';
+        break;
+    case 'dt':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-dt-element';
+        break;
+    case 'dd':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-dd-element';
+        break;
+    case 'figure':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-figure-element';
+        break;
+    case 'figcaption':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-figcaption-element';
+        break;
+    case 'div':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-div-element';
+        break;
+    case 'main':
+        link = 'http://www.w3.org/TR/html5/grouping-content.html#the-main-element';
+        break;
+    case 'a':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-a-element';
+        break;
+    case 'em':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-em-element';
+        break;
+    case 'strong':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-strong-element';
+        break;
+    case 'small':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-small-element';
+        break;
+    case 's':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-s-element';
+        break;
+    case 'cite':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-cite-element';
+        break;
+    case 'q':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-q-element';
+        break;
+    case 'dfn':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-dfn-element';
+        break;
+    case 'abbr':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-abbr-element';
+        break;
+    case 'data':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-data-element';
+        break;
+    case 'time':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-time-element';
+        break;
+    case 'code':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-code-element';
+        break;
+    case 'var':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-var-element';
+        break;
+    case 'samp':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-samp-element';
+        break;
+    case 'kbd':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-kbd-element';
+        break;
+    case 'sub':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-sub-and-sup-elements';
+        break;
+    case 'sup':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-sub-and-sup-elements';
+        break;
+    case 'i':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-b-element';
+        break;
+    case 'b':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-b-element';
+        break;
+    case 'u':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-u-element';
+        break;
+    case 'mark':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-mark-element';
+        break;
+    case 'ruby':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-ruby-element';
+        break;
+    case 'rb':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-rb-element';
+        break;
+    case 'rt':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-rt-element';
+        break;
+    case 'rtc':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-rtc-element';
+        break;
+    case 'rp':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-rp-element';
+        break;
+    case 'bdi':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-bdi-element';
+        break;
+    case 'bdo':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-bdo-element';
+        break;
+    case 'span':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-span-element';
+        break;
+    case 'br':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-br-element';
+        break;
+    case 'wbr':
+        link = 'http://www.w3.org/TR/html5/text-level-semantics.html#the-wbr-element';
+        break;
+    case 'ins':
+        link = 'http://www.w3.org/TR/html5/edits.html#the-ins-element';
+        break;
+    case 'del':
+        link = 'http://www.w3.org/TR/html5/edits.html#the-del-element';
+        break;
+    case 'img':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-img-element';
+        break;
+    case 'iframe':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-iframe-element';
+        break;
+    case 'embed':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-embed-element';
+        break;
+    case 'object':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-object-element';
+        break;
+    case 'param':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-param-element';
+        break;
+    case 'video':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-video-element';
+        break;
+    case 'audio':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-audio-element';
+        break;
+    case 'source':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-source-element';
+        break;
+    case 'track':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-track-element';
+        break;
+    case 'map':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-map-element';
+        break;
+    case 'area':
+        link = 'http://www.w3.org/TR/html5/embedded-content-0.html#the-area-element';
+        break;
+    case 'table':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-table-element';
+        break;
+    case 'caption':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-caption-element';
+        break;
+    case 'colgroup':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-colgroup-element';
+        break;
+    case 'col':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-col-element';
+        break;
+    case 'tbody':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-tbody-element';
+        break;
+    case 'thead':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-thead-element';
+        break;
+    case 'tfoot':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-tfoot-element';
+        break;
+    case 'tr':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-tr-element';
+        break;
+    case 'td':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-td-element';
+        break;
+    case 'th':
+        link = 'http://www.w3.org/TR/html5/tabular-data.html#the-th-element';
+        break;
+    case 'form':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-form-element';
+        break;
+    case 'label':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-label-element';
+        break;
+    case 'input':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-input-element';
+        break;
+    case 'button':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-button-element';
+        break;
+    case 'select':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-select-element';
+        break;
+    case 'datalist':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-datalist-element';
+        break;
+    case 'optgroup':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-optgroup-element';
+        break;
+    case 'option':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-option-element';
+        break;
+    case 'textarea':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-textarea-element';
+        break;
+    case 'keygen':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-keygen-element';
+        break;
+    case 'output':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-output-element';
+        break;
+    case 'progress':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-progress-element';
+        break;
+    case 'meter':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-meter-element';
+        break;
+    case 'fieldset':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-fieldset-element';
+        break;
+    case 'legend':
+        link = 'http://www.w3.org/TR/html5/forms.html#the-legend-element';
+        break;
+    case 'script':
+        link = 'http://www.w3.org/TR/html5/scripting-1.html#the-script-element';
+        break;
+    case 'noscript':
+        link = 'http://www.w3.org/TR/html5/scripting-1.html#the-noscript-element';
+        break;
+    case 'template':
+        link = 'http://www.w3.org/TR/html5/scripting-1.html#the-template-element';
+        break;
+    case 'canvas':
+        link = 'http://www.w3.org/TR/html5/scripting-1.html#the-canvas-element';
+        break;
+
+    }
+
+    return {
+        etiqueta:etiqueta,
+        enlace:link,
+        atributo:atr
+    };
+};
+
+/**
+ * Checks for obsolete tags. / Revisa la existencia de etiquetas obsoletas.
+ * @param  {string} nombreEti - Contains the name of the tag to be analyzed. / Contiene el nombre de la etiqueta que se va a analizar.
+ * @param  {number} linea     - Contains the line number where the tag is found. / Contiene el número de linea donde se encuentra la etiqueta.
+ * @return {boolean}           - True if obsolete. / Verdadero si es obsoleto.
+ */
+var revisarEtiqueta = function (nombreEti, linea){
+ 
+    var val = false;
+    nombreEti = nombreEti.split('&lt;').join('');
+    nombreEti = nombreEti.toLowerCase();
+    switch(nombreEti){
+
+        case 'applet':
+            advertencia.push('Remplazar '+nombreEti+' por: embed u object en la linea '+linea);
+            val = true;
+            break;
+        case 'acronym':
+            advertencia.push('Remplazar '+nombreEti+' por: abbr en la linea '+linea);
+            val = true;
+            break;
+        case 'bgsound':
+            advertencia.push('Remplazar '+nombreEti+' por: audio en la linea '+linea);
+            val = true;
+            break;
+        case 'dir':
+            advertencia.push('Remplazar '+nombreEti+' por: ul en la linea '+linea);
+            val = true;
+            break;
+        case 'frame':
+        case 'frameset':
+        case 'noframes':
+            advertencia.push('Remplazar '+nombreEti+' por: iframe en la linea '+linea);
+            val = true;
+            break;
+        case 'hgroup':
+            advertencia.push(nombreEti+' Obsoleta en la linea '+linea);
+            val = true;
+            break;
+        case 'isindex':
+            advertencia.push('Remplazar '+nombreEti+' por: form  en la linea '+linea);
+            val = true;
+            break;
+        case 'listing':
+            advertencia.push('Remplazar '+nombreEti+' por: pre, code en la linea '+linea);
+            val = true;
+            break;
+        case 'nextid':
+            advertencia.push(nombreEti+' Obsoleta  en la linea '+linea);
+            val = true;
+            break;
+        case 'noembed':
+            advertencia.push('Remplazar '+nombreEti+' por: object en la linea '+linea);
+            val = true;
+            break;
+        case 'plaintext':
+            advertencia.push('Remplazar '+nombreEti+' por: text/plain  en la linea '+linea);
+            val = true;
+            break;
+        case 'strike':
+            advertencia.push('Remplazar '+nombreEti+' por: del, s en la linea '+linea);
+            val = true;
+            break;
+        case 'xmp':
+            advertencia.push('Remplazar '+nombreEti+' por: pre, code en la linea '+linea);
+            val = true;
+            break;
+        case 'basefont':
+        case 'big':
+        case 'blink':
+        case 'center':
+        case 'font':
+        case 'marquee':
+        case 'multicol':
+        case 'nobr':
+        case 'spacer':
+        case 'tt':
+            advertencia.push(nombreEti+' Obsoleto en la linea '+linea);
+            val = true;
+            break;
+        default:
+            break;
+
+    }
+    return val;
+};
+/**
+ * Checks for obsolete attributes. / Revisa la existencia de atributos obsoletos.
+ * @param  {string} etiqueta - Contains the name of the tag to be analyzed. / Contiene el nombre de la etiqueta a analizar.
+ * @param  {string} atributo - Contains the name of the attribute to be analyzed. / Contiene el nombre  del atributo a analizar.
+ * @param  {object} arr      - Contains the stack of the parse. / Contiene la pila del parse.
+ * @param  {number} linea    - Line number where the attribute was found. / Número de linea donde se encontró el atributo.
+ * @return {boolean}         - True if obsolete. / Verdadero si es obsoleto
+ */
+var revisarAtrib = function (etiqueta, atributo, arr, linea){
+   
+    var etiq ="";
+    var atr ="";
+    var str;
+    var str2;
+    var condicion = true;
+    var val = false;
+
+    if(/(&lt;[a-zA-Z]*)/gmi.test(etiqueta) &amp;&amp; /([a-zA-Z0-9]+)/gmi.test(atributo)){
+        etiq = etiqueta.split("&lt;").join("").split(" ").join("");
+        atr = atributo.replace(/(([a-z0-9]*)(.*))/gmi,'$2');
+    }
+
+    if(/([a-zA-Z0-9]+=*(\"|\')*[^\'^\"]*(\"|\')*)/gmi.test(etiqueta) &amp;&amp; /([a-zA-Z0-9]+=*(\"|\')*[^\'^\"]*(\"|\')*)/gmi.test(atributo) &amp;&amp; etiqueta === atributo ){
+        str = arr[arr.length-3];
+        etiq = str.split("&lt;").join("").split(" ").join("");
+        str2 = atributo.split("=");
+        atr = str2[0];
+    }
+
+    etiq = etiq.toLowerCase();
+    atr = atr.toLowerCase();
+
+    switch(condicion){
+
+        case ((etiq === "a" || etiq === "link") &amp;&amp; atr ==="charset"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice el encabezado HTTP Content-Type "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "a" &amp;&amp; (atr === "coords" || atr === "shape")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice área en lugar del a para los mapas de caracteres "+"en la linea "+linea);
+            val = true;
+            break;
+        case ((etiq === "a" || etiq === "link") &amp;&amp; atr ==="methods"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice la característica de opciones en lugar de HTTP "+"en la linea "+linea);
+            val = true;
+            break;
+        case ((etiq === "a" || etiq === "embed" || etiq === "img" || etiq === "option") &amp;&amp; atr ==="name"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice id en su lugar "+"en la linea "+linea);
+            val = true;
+            break;
+        case ((etiq === "a" || etiq === "link") &amp;&amp; atr ==="urn"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice href  "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "form" &amp;&amp; atr === "accept"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice accept directamente en los input "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "form" &amp;&amp; atr === "nohref"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Omitir href es suficiente "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "head" &amp;&amp; atr === "profile"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Es inecesaria en los meta. Cuando se utiliza para desencadenar conductas de agentes usuario específicos: utilizar link en su lugar "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "html" &amp;&amp; atr === "version"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Se omite, no es necesario "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "input" &amp;&amp; atr === "ismap"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" No es necesario, se omite por completo "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "input" &amp;&amp; atr === "usemap"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice img en lugar de input "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "img" &amp;&amp; atr === "lowsrc"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Use una imagen JPEG progresiva (dada en el src), en lugar de utilizar dos imágenes separadas "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "link" &amp;&amp; atr === "target"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" No es necesario, se omite por completo "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "meta" &amp;&amp; atr === "scheme"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice solo un esquema de campo, o hacer de declaración esquema, valor "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "object" &amp;&amp; (atr === "archive" || atr === "classid" || atr === "code" || atr === "codebase" || atr === "codetype")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice los data y type para invocar plugins. Para establecer los parámetros con estos nombres en particular, utilizar param "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "object" &amp;&amp; atr === "declare"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Repita el object cada vez, el recurso es para ser reutilizado "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "object" &amp;&amp; atr === "standby"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Optimizar el recurso vinculado para que se cargue rápidamente o, al menos, de forma incremental "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "param" &amp;&amp; (atr === "type" || atr === "valuetype")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Usa los name y value atributos sin declarar los tipos de valor "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "script" &amp;&amp; (atr === "language" || atr === "event" || atr === "for")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice el DOM para registrar detectores de evento "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "table" &amp;&amp; atr === "datepagesize"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" No es necesario, se omite "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "table" &amp;&amp; atr === "summary"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice una de las técnicas para la descripción de table en su lugar "+"en la linea "+linea);
+            val = true;
+            break;
+        case ((etiq === "td" &amp;&amp; etiq === "th") &amp;&amp; atr === "scope"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice el scope en el th o td correspondiente "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "td" &amp;&amp; atr === "scope"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Utilice th "+"en la linea "+linea);
+            val = true;
+            break;
+        case ((etiq === "a" || etiq === "applet" || etiq === "buttom" || etiq === "div" || etiq === "frame" || etiq === "iframe" || etiq === "img" || etiq === "input" || etiq === "label" || etiq === "legend" || etiq === "marquee" || etiq === "object" || etiq === "option" || etiq === "select" || etiq === "span" || etiq === "table" || etiq === "textarea") &amp;&amp; (atr === "datasrc" || atr === "datafld")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Uso de la escritura y mecanismo XMLHttpRequest para rellenar la página dinámicamente "+"en la linea "+linea);
+            val = true;
+            break;
+        case ((etiq === "buttom" || etiq === "div" || etiq === "input" || etiq === "label" || etiq === "legend" || etiq === "marquee" || etiq === "object" || etiq === "option" || etiq === "select" || etiq === "span" || etiq === "table") &amp;&amp; atr === "dataformatas"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Uso de la escritura y mecanismo XMLHttpRequest para rellenar la página dinámicamente "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "body" &amp;&amp; (atr === "alink" || atr === "bgcolor" || atr === "link" || atr === "marginbottom" || atr === "marginheight" || atr === "marginleft" || atr === "marginright" || atr === "margintop" || atr === "marginwidth" || atr === "text" || atr === "vlink")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "br" &amp;&amp; atr === "clear"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "caption" &amp;&amp; atr === "align"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "col" &amp;&amp; (atr === "alink" || atr === "char" || atr === "charoff" || atr === "valign" || atr === "width" )):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "div" &amp;&amp; atr === "align"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "dl" &amp;&amp; atr === "compact"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "embed" &amp;&amp; (atr === "alink" || atr === "hspace" || atr === "vspace")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "hr" &amp;&amp; (atr === "alink" || atr === "color" || atr === "noshade" || atr === "size" || atr === "width")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break; 
+        case ((etiq === "h1" || etiq === "h2" || etiq === "h3" || etiq === "h4" || etiq === "h5" || etiq === "h6") &amp;&amp; atr === "align"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "iframe" &amp;&amp; (atr === "alink" || atr === "allowtransparency" || atr === "frameborder" || atr === "hspace" || atr === "marginheight" || atr === "marginwidth" || atr === "scrolling" || atr === "vspace")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "input" &amp;&amp; (atr === "alink" || atr === "hspace" || atr === "vspace")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "img" &amp;&amp; (atr === "alink" || atr === "border")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "img" &amp;&amp; (atr === "hspace" || atr === "hspace" || atr === "vspace" || atr === "align" || atr === "type")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Usar css en su lugar "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "object" &amp;&amp; (atr === "align" || atr === "border" || atr === "vspace" || atr === "hspace")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Usar css en su lugar "+"en la linea "+linea);
+            val = true;
+            break; 
+        case (etiq === "ol" &amp;&amp; atr === "compact"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "p" &amp;&amp; atr === "align"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "pre" &amp;&amp; atr === "width"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior, para mas visite http://www.w3.org/TR/html5/obsolete.html "+"en la linea "+linea);
+            val = true;
+            break;
+        case (etiq === "table" &amp;&amp; (atr === "align" || atr === "bgcolor" || atr === "bordercolor" || atr === "cellpadding" || atr === "cellspacing" || atr === "frame" || atr === "rules" || atr === "width")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Usar css en su lugar "+"en la linea "+linea);
+            val = true;
+            break; 
+        case ((etiq === "tbody" || etiq === "thead" || etiq === "tfoot") &amp;&amp; (atr === "align" || atr === "char" || atr === "charoff" || atr === "valign")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Usar css en su lugar "+"en la linea "+linea);
+            val = true;
+            break;
+        case ((etiq === "td" || etiq === "th") &amp;&amp; (atr === "align" || atr === "bgcolor" || atr === "char" || atr === "charoff" || atr === "height" || atr === "nowrap" || atr === "valign" || atr === "width")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Usar css en su lugar "+"en la linea "+linea);
+            val = true;
+            break; 
+        case (etiq === "tr" &amp;&amp; (atr === "align" || atr === "bgcolor" || atr === "char" || atr === "charoff" || atr === "valign")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Usar css en su lugar "+"en la linea "+linea);
+            val = true;
+            break; 
+        case (etiq === "ul" &amp;&amp; (atr === "compact" || atr === "type")):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Usar css en su lugar "+"en la linea "+linea);
+            val = true;
+            break; 
+        case ((etiq === "body" || etiq === "table" || etiq === "thead" || etiq === "tbody" || etiq === "tfoot" || etiq === "tr" || etiq === "td" || etiq === "th") &amp;&amp; atr === "background"):
+            advertencia.push("Para el elemento: "+etiq+" con atributo "+atr+" Excepto como indica la sección anterior "+"en la linea "+linea);
+            val = true;
+            break;
+        default:
+            break;
+    } 
+    return val;
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#advAtr">advAtr</a></li><li><a href="global.html#aniNiveles">aniNiveles</a></li><li><a href="global.html#atributos">atributos</a></li><li><a href="global.html#ramas">ramas</a></li><li><a href="global.html#revisarAtrib">revisarAtrib</a></li><li><a href="global.html#revisarEtiqueta">revisarEtiqueta</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Thu May 21 2015 15:41:08 GMT-0430 (Hora estándar de Venezuela)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

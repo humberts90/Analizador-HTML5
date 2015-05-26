@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang = "es">
+<head>
+<title>
+</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="http://www.w3.org" rel="stylesheet" type="text/css">
+<style></style>
+<base href="http://www.w3schools.com/images/" target="_blank">
+</head>
+
+<body>
+
+<nav></nav>
+
+<section>
+<article>
+<header>
+<h1></h1>
+<h2></h2>
+</header>
+</article>
+</section>
+
+<aside>
+
+</aside>
+
+<footer>
+<address></address>
+</footer>
+
+</body>
+
+</html>
