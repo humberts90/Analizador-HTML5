@@ -230,7 +230,7 @@ gramaticaHTML5.jison is part of Analizador-HTML5.
 
 "/>"   return 'cIzqE'
 ">"   return 'cIzq'
-" "*"data-"([a-zA-Z]+"-"*[a-zA-Z]*)" "* return 'atr_dataAST'
+" "*"data"("-"[a-zA-Z]+)*" "* return 'atr_dataAST'
 " "*"oncanplaythrough"" "* return 'atr_oncanplaythrough'
 " "*"ondurationchange"" "* return 'atr_ondurationchange'
 " "*"onloadedmetadata"" "* return 'atr_onloadedmetadata'

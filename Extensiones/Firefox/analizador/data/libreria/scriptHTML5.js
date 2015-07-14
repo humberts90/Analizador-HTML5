@@ -132,7 +132,7 @@ function analizarHTML (parser, html) {
    recArbolHTML(objAST.getArbol.documento,'document',objAST.getAdvertencia,null,"",objAST.getArbol.doctype, objAST.getArbol.linea); // Travel tree to assess semantic content / Recorrido del árbol para evaluar contenido semántico
    
    // remove line breaks produced within the tags. / eliminamos los saltos de linea producidos dentro de las etiquetas.
-   fuente = fuente.replace(/(((<[a-z0-9]+\s*))(([a-z0-9]*)\s*\=*(((\"|\')?[^\"^\'^\s^\>]*(\"|\')?)))*\s*>)/gmi,function(flag){
+   fuente = fuente.replace(/(((<[a-z0-9]+\s*))(([a-z0-9]*)\s*\=+(((\"|\')?[^\"^\'^\s^\>]*(\"|\')?)))*\s*>)/gmi,function(flag){
    		var numR = flag.split("\n");
    		
    		var saltos = '';
