@@ -24,7 +24,7 @@ You will be able to install the plugins as follows:
 
 - **Locally:** by dragging and dropping the corresponding add-ons with .xpi or .crx extensions.
 
-- **Via the Web:** by downloading the plugins from the Mozilla Firefox or Google Chrome website.
+- **Via the Web:** by downloading the plugins from the Mozilla Firefox or Google Chrome website. (Soon)
 
 ## **Known problems**
 
@@ -80,7 +80,7 @@ Usted podrá instalar los plugins de las siguientes maneras:
 
 - **Localmente:** Arrastrando y soltando los complementos correspondientes con rutas .xpi o .crx
 
-- **Vía web:** Descargando el plugins desde la web de Mozilla Firefox como en la de Google Chrome.
+- **Vía web:** Descargando el plugins desde la web de Mozilla Firefox como en la de Google Chrome. (Próximamente)
 
 
 ## **Problemas conocidos**
