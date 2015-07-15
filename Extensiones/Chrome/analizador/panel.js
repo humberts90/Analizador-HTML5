@@ -37,12 +37,17 @@ panel.js is part of Analizador-HTML5.
 	 var port = chrome.runtime.connect({name: "Eval in context"});
       port.onMessage.addListener(function (data) {
        	
-      	 document.getElementById('salida').innerHTML = '';
+      	 document.getElementById('salida').innerHTML = 'Analizando...';
 		  var advertencias = analizarHTML(parser,data);
 		  
 		  for(var i in advertencias)
 		     document.getElementById('salida').innerHTML += '<div><p>'+advertencias[i]+'</p></div>';
 
+       if(advertencias.length < 1)
+          {
+            document.getElementById('salida').innerHTML = 'Análisis culminado con exito, no se encontrarón advertencias';
+            document.getElementById('salida').style.color = 'green';
+          }
 
       });
 

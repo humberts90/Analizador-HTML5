@@ -34,7 +34,7 @@ function addRuta(url){
 	var color = 'Negro';
 	
 	window.addEventListener("message", function(event) {  
-		  document.getElementById('salida').innerHTML = '';
+		  document.getElementById('salida').innerHTML = 'Analizando...';
 		  
 		  if(event.data === 'Blanco'){
 		  		document.getElementById('salida').style.color = 'black';
@@ -51,7 +51,11 @@ function addRuta(url){
 			  for(var i in advertencias)
 			     document.getElementById('salida').innerHTML += '<div><p>'+advertencias[i]+'</p></div>';
 				
-
+			  if(advertencias.length < 1)
+			  	{
+			  		document.getElementById('salida').innerHTML = 'Análisis culminado con exito, no se encontrarón advertencias';
+			  		document.getElementById('salida').style.color = 'green';
+			  	}
 				var lista = document.getElementsByTagName('a');
 		 		
 		 		for(var i=0;i<lista.length;i++){
