@@ -23,6 +23,7 @@ scriptHTML5.js is part of Analizador-HTML5.
     along with Analizador-HTML.  If not, see <http://www.gnu.org/licenses/>.
 
  */
+
  'use stric';
  /**
   * Separates and returns the HTML tags present in the document. / Separa y retorna las etiquetas HTML presentes en el documento.
