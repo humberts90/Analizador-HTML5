@@ -36,7 +36,7 @@ function addRuta(url){
 	window.addEventListener("message", function(event) {  
 
 		  document.getElementById('salida').innerHTML = '';       	
-		  document.getElementById('salida').innerHTML = '<div><p>Analizando...</p></div>';
+		  document.getElementById('salida').innerHTML = '<p><strong>Analizando...</strong></p>';
 		  
 		  if(event.data === 'Blanco'){
 		  		document.getElementById('salida').style.color = 'black';
@@ -60,7 +60,7 @@ function addRuta(url){
 				
 			  if(advertencias.length < 1)
 			  	{
-			  		document.getElementById('salida').innerHTML = '<div>Análisis culminado con exito, no se encontrarón advertencias</div>';
+			  		document.getElementById('salida').innerHTML = '<p><strong>Análisis culminado con exito, no se encontrarón advertencias</strong></p>';
 			  		document.getElementById('salida').style.color = 'green';
 			  	}
 				var lista = document.getElementsByTagName('a');
