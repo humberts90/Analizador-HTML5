@@ -1695,10 +1695,10 @@ function recArbolHTML(etiqueta, nomEP, getAdvertencia, etiStop, vtransp, doctype
 							
 							for(var k in etiqueta[i].atr){			
 								if(Object.keys(etiqueta[i].atr[k]).toString().toLowerCase() === 'src'){
-									bandera = false;
+									bandera = true;
 								}
 								else{
-									bandera = true;
+									bandera = false;
 								}		
 							}
 							
@@ -1760,10 +1760,10 @@ function recArbolHTML(etiqueta, nomEP, getAdvertencia, etiStop, vtransp, doctype
 
 							for(var k in etiqueta[i].atr){			
 								if(Object.keys(etiqueta[i].atr[k]).toString().toLowerCase() === 'src'){
-									bandera = false;
+									bandera = true;
 								}
 								else{
-									bandera = true;
+									bandera = false;
 								}
 									
 							}
