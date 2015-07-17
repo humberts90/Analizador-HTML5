@@ -55,7 +55,7 @@ function getEtiquetas(url,port){
 	
 
 		req.open('GET', url, true);
-		req.overrideMimeType("text/plain; charset=latin1");
+		req.overrideMimeType("text/plain; charset=UTF-8");
 
 		req.onreadystatechange = function (aEvt) {
 

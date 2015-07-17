@@ -39,7 +39,7 @@ function enviarEtiquetas(thisPanel,ventanaNav){
       var urlNavegador = JSON.stringify(ventanaNav.content.document.URL).split('"').join("");
       var codigoFuente = Request({
         url: urlNavegador,
-        overrideMimeType: "text/plain; charset=latin1",
+        overrideMimeType: "text/plain; charset=UTF-8",
         onComplete: function (response) {
            thisPanel.postMessage(response.text, [thisPanel.debuggee]);
         }
