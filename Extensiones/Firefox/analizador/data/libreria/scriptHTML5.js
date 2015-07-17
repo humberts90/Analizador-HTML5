@@ -358,6 +358,8 @@ function traducirLinea(linea, htmlOriginal, html, getAdvertencia){
 				}
 				// if it matches the value of w is added to the parallel arrangement / si coincide se agrega el valor de w al arreglo paralelo
 				if(linea[w].indexOf(htmlOriginal[k]) >= 0){
+					var limite = linea[w].indexOf(htmlOriginal[k]);
+					linea[w] = linea[w].substring(limite,linea[w].length);					
 					paralelo[k] = w+1;
 				}
 				
