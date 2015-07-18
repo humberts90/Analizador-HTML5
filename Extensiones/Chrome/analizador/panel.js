@@ -45,14 +45,30 @@ panel.js is part of Analizador-HTML5.
           document.getElementById('salida').innerHTML = '';
         }
 		  
-		  for(var i in advertencias)
-		     document.getElementById('salida').innerHTML += '<div><p>'+advertencias[i]+'</p></div>';
+        var idAc = 0;
+        for(var i in advertencias){
+
+          if(advertencias[i].extracto.length < 250)
+            document.getElementById('salida').innerHTML += '<section class="ac-container"><div><input id="ac-'+idAc+'" name="accordion-'+idAc+'" type="checkbox" /> <label for="ac-'+idAc+'">'+advertencias[i].getAdvertencia+'</label><article class="ac-small"><p> '+advertencias[i].extracto.replace(/(\<)/gmi,'&lt;')+'</p>         </article>        </div>      </section>';
+           else
+            document.getElementById('salida').innerHTML += '<section class="ac-container"><div><input id="ac-'+idAc+'" name="accordion-'+idAc+'" type="checkbox" /> <label for="ac-'+idAc+'">'+advertencias[i].getAdvertencia+'</label><article class="ac-small"><p> '+advertencias[i].extracto.replace(/(\<)/gmi,'&lt;').substring(0,250)+'...</p>         </article>        </div>      </section>';
+           
+         idAc = idAc + 1;
+        }
 
        if(advertencias.length < 1)
           {
             document.getElementById('salida').innerHTML = '<p><strong>Análisis culminado con exito, no se encontrarón advertencias</strong></p>';
             document.getElementById('salida').style.color = 'green';
           }
+          var lista = document.getElementsByTagName('a');
+        
+        for(var i=0;i<lista.length;i++){
+      
+          lista[i].style.color = 'blue';
+
+          lista[i].setAttribute('target','_black');
+        }
 
       });
 
