@@ -1843,11 +1843,11 @@ function recArbolHTML(etiqueta, nomEP, getAdvertencia, etiStop, vtransp, doctype
 
 							vect = buscarHijos(etiqueta[i],getAdvertencia);
 													
-							if(/(area)/i.test(vTransp))
+							if(/(,\"area)/i.test(vTransp))
 								vTransp = JSON.parse(vTransp);
 							else{
-								vTransp.push('area');
 								vTransp = JSON.parse(vTransp);
+								vTransp.push('area');
 							}
 
 							for(var j in vect){
