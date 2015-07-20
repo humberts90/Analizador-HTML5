@@ -48,6 +48,9 @@ function getEtiquetas (html){
     // in this section we separated from the rest of the html code. / en está sección separamos el código html del resto.
     fuenteHTML = fuenteHTML.replace(/(<svg((.|\n|\t|\r)*?)*?<\/svg\s*>)/gmi,'<svg></svg>');
     fuenteHTML = fuenteHTML.replace(/(<math((.|\n|\t|\r)*?)*?<\/math\s*>)/gmi,'<math></math>');
+    fuente = fuente.replace(/(<svg((.|\n|\t|\r)*?)*?<\/svg\s*>)/gmi,'<svg></svg>');
+    fuente = fuente.replace(/(<math((.|\n|\t|\r)*?)*?<\/math\s*>)/gmi,'<math></math>');
+
 
     fuenteHTML = fuenteHTML.replace(/((<script((.|\n|\t|\r)*?)*?>)((.|\n|\t|\r)*?)*?<\/script\s*>)/gmi,'$2</script>');
     fuenteHTML = fuenteHTML.replace(/((<style((.|\n|\t|\r)*?)*?>)((.|\n|\t|\r)*?)*?<\/style\s*>)/gmi,'$2</style>');
@@ -153,7 +156,7 @@ function analizarHTML (parser, html) {
    }); // convierte el codigo de una misma etiqueta, en 1 sola completa con saltos de linea la diferencia
    
    var lineasFuente = fuente.match(
-		new RegExp("((\n+[^\n]*\n*)|(\n*[^\n]*\n*)|(\n*[^\n]*\n+)|(\n+[^\n]*\n+))", "gmi")
+		new RegExp("(\n*[^\n]*)", "gmi")
 		); //each line becomes a position in the array / convierte cada linea en una posicion en el vector
  
 	resultAnalisis = traducirLinea(lineasFuente,htmlOriginal,htmlOriginal2,objAST.getAdvertencia); // parse output translates to the real numbers of the document / se traduce la salida del parse a la numeración real del documento
