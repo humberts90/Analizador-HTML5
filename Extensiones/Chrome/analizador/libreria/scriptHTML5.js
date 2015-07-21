@@ -156,7 +156,7 @@ function analizarHTML (parser, html) {
    }); // convierte el codigo de una misma etiqueta, en 1 sola completa con saltos de linea la diferencia
    
    var lineasFuente = fuente.match(
-		new RegExp("(\n*[^\n^\r]*)", "gmi")
+		new RegExp("(\n*[^\n]*)", "gmi")
 		); //each line becomes a position in the array / convierte cada linea en una posicion en el vector
  
 	resultAnalisis = traducirLinea(lineasFuente,htmlOriginal,htmlOriginal2,objAST.getAdvertencia); // parse output translates to the real numbers of the document / se traduce la salida del parse a la numeración real del documento
