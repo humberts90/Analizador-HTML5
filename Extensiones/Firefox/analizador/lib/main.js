@@ -61,12 +61,6 @@ var REPLPanel = Class({
   onReady: function() {
    
       var thisPanel = this;
-      var selectedThemeID = require("sdk/preferences/service").get(nombre);
-
-      if(selectedThemeID === 'light')
-          this.postMessage('Blanco', [this.debuggee]);
-       if(selectedThemeID === 'dark')
-          this.postMessage('Negro', [this.debuggee]);
 
       enviarEtiquetas(thisPanel, ventanaNav);
 

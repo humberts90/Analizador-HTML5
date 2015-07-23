@@ -136,7 +136,8 @@ function analizarHTML (parser, html) {
    recArbolHTML(objAST.getArbol.documento,'document',objAST.getAdvertencia,null,"",objAST.getArbol.doctype, objAST.getArbol.linea); // Travel tree to assess semantic content / Recorrido del árbol para evaluar contenido semántico
    
    // remove line breaks produced within the tags. / eliminamos los saltos de linea producidos dentro de las etiquetas.
-   fuente = fuente.replace(/(((<[a-z0-9]+\s*))(([a-z0-9]\-*)\s*(\=+((\"|\')?[^\"^\'^\>]*(\"|\')?))*|(\n|\r|\s))*\s*>)/gmi,function(flag){
+   
+   fuente = fuente.replace(/(((<[a-z0-9]+\s*))(([a-z0-9]\-*)\s*(\=+((\"|\')?[^\"^\'^\>]*(\"|\')?))*|(\n|\s))*\s*\/*>)/gmi,function(flag){
    		var numR = flag.split("\n");
    		
    		var saltos = '';
@@ -154,11 +155,9 @@ function analizarHTML (parser, html) {
    		
    		return flag;
    }); // convierte el codigo de una misma etiqueta, en 1 sola completa con saltos de linea la diferencia
-   
-   var lineasFuente = fuente.match(
-		new RegExp("(\n*[^\n]*)", "gmi")
-		); //each line becomes a position in the array / convierte cada linea en una posicion en el vector
- 
+
+   var lineasFuente = fuente.split('\n') //each line becomes a position in the array / convierte cada linea en una posicion en el vector
+
 	resultAnalisis = traducirLinea(lineasFuente,htmlOriginal,htmlOriginal2,objAST.getAdvertencia); // parse output translates to the real numbers of the document / se traduce la salida del parse a la numeración real del documento
 
     return resultAnalisis;

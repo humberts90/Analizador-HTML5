@@ -37,6 +37,8 @@ function addRuta(url){
 
 		  document.getElementById('salida').innerHTML = '';       	
 		  document.getElementById('salida').innerHTML = '<b id="msj">Analizando...</b>';		
+		  
+			 try {
 
 			  var advertencias = analizarHTML(parser,event.data);
 
@@ -55,19 +57,21 @@ function addRuta(url){
 			     
 				 idAc = idAc + 1;
 			  }
+
 			  if(advertencias.length < 1)
 			  	{
 			  		document.getElementById('salida').innerHTML = '<b id="msj">Análisis culminado con éxito, no se encontrarón advertencias</b>';
 			  		document.getElementById('salida').style.color = 'green';
 			  	}
+
 				var lista = document.getElementsByTagName('a');
 		 		
-		 		for(var i=0;i<lista.length;i++){
-		 	
+		 		for(var i=0;i<lista.length;i++){		 	
 		 			lista[i].style.color = 'blue';
-
 		 			lista[i].setAttribute('target','_black');
 		 		}
 
-		
+		 	}catch (e) {
+				document.getElementById('salida').innerHTML += '<b id="msj" style="color:red; font-size:14px;">Ups... ha ocurrido un problema al momento de generar el árbol de etiquetas, si ves este mensaje escribe a <a href="mailto:humberts90@gmail.com">humberts90@gmail.com</a> informando del problema, si el problema te da con un sitio online enviá la URL para realizar la prueba y corregír el problema.</b>';
+			}
 	});
