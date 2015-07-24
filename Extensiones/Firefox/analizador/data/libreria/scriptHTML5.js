@@ -344,7 +344,7 @@ function traducirLinea(linea, htmlOriginal, html, getAdvertencia){
 
 	k = 0;
 	w = 0;
-	
+	var lineaAnterior = 0;
 	for(var i in linea)
 		lineaCopy.push(linea[i]);
 
@@ -361,8 +361,13 @@ function traducirLinea(linea, htmlOriginal, html, getAdvertencia){
 	   				htmlOriginal[k] = htmlOriginal[k].replace(/(\s+)/gmi,' ')
 		   		}
 		   		// if different, it increases the value of the iterator w / si no coincide, aumenta el valor del iterador w
-				while(linea[w].indexOf(htmlOriginal[k]) < 0){	
-					w = w + 1;
+				try{
+					while(linea[w].indexOf(htmlOriginal[k]) < 0){	
+						w = w + 1;
+					}
+				}catch(e){
+					paralelo[k] = 'NN';
+					w = lineaAnterior;
 				}
 				// if it matches the value of w is added to the parallel arrangement / si coincide se agrega el valor de w al arreglo paralelo
 				if(linea[w].indexOf(htmlOriginal[k]) >= 0){
@@ -370,6 +375,7 @@ function traducirLinea(linea, htmlOriginal, html, getAdvertencia){
 					var taman = htmlOriginal[k].length;
 					linea[w] = linea[w].substring((limite+taman),linea[w].length);					
 					paralelo[k] = w+1;
+					lineaAnterior = w;
 				}
 				
 			}
