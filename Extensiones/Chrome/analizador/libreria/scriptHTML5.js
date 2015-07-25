@@ -123,6 +123,9 @@ function analizarHTML (parser, html) {
     for(var i in objHtml.tags_arbol)
        	htmlOriginal2.push(objHtml.tags_arbol[i]) // backed tags once modified / copia de las etiquetas una vez modificadas
 
+    for(var i in objHtml.tags_arbol)
+       	objHtml.tags_arbol[i] = objHtml.tags_arbol[i].replace(/((\n|\t|\s))/gmi,' '); 
+
     /**
      * objAST Get tree of parse /objAST obtiene el árbol devuelto por el parse
      * @type {object}
