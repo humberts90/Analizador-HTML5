@@ -56,7 +56,7 @@ Requests to collaborate will be welcome. The project will be extended to a new b
 ### Español
 
 
-Esta aplicación consiste en una herramienta para el análisis (tanto léxico, sintáctico, como semántico) de estructuras HTML5. La aplicación fue realizada puramente en JavaScript, por lo que no necesitará conexión a Internet para ser utilizada.
+Esta aplicación consiste en una herramienta para el análisis (tanto léxico, sintáctico como semántico) de estructuras HTML5. La aplicación fue realizada puramente en JavaScript, por lo que no necesitará conexión a Internet para ser utilizada.
 
 El proyecto fue presentado como trabajo de tesis para mi universidad, por lo que solo se cubre una parte de estándar W3C para HTML5 a día de hoy.
 
@@ -99,7 +99,7 @@ Usted podrá instalar los plugins de las siguientes maneras:
 
 ## **Desarrollo**
 
-Peticiones para colaborar serán bienvenidas. Se extenderá el proyecto a una nueva rama para agregar nuevas características solventar los problemas ya conocidos.
+Peticiones para colaborar serán bienvenidas. Se extenderá el proyecto a una nueva rama para agregar nuevas características y/ó solventar los problemas ya conocidos.
 
 **Más información será brindada en la wiki del repositorio.**
 

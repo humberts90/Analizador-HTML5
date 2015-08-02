@@ -140,7 +140,8 @@ function analizarHTML (parser, html) {
    
    // remove line breaks produced within the tags. / eliminamos los saltos de linea producidos dentro de las etiquetas.
    
-   fuente = fuente.replace(/(((<[a-z0-9]+\s*))(([a-z0-9]\-*)\s*(\=+((\"|\')?[^\"^\'^\>]*(\"|\')?))*|(\n|\s))*\s*\/*>)/gmi,function(flag){
+  // fuente = fuente.replace(/(((<[a-z0-9]+\s*))(([a-z0-9]\-*)\s*(\=+((\"|\')?[^\"^\'^\>]*(\"|\')?))*|(\n|\s))*\s*\/*>)/gmi,function(flag){
+  fuente = fuente.replace(/(<[a-z0-9]+(\n*[^\n]*)>)/gmi,function(flag){
    		var numR = flag.split("\n");
    		
    		var saltos = '';
@@ -150,7 +151,7 @@ function analizarHTML (parser, html) {
    				saltos += "\n";
    			}
    			
-   			flag = flag.replace(/((\n)*)/gmi,'')
+   			flag = flag.replace(/((\n)+)/gmi,'')
    			flag = flag.replace(/(\s+)/gmi,' ')
 
    			flag = flag + saltos;
@@ -368,9 +369,9 @@ function traducirLinea(linea, htmlOriginal, html, getAdvertencia){
 					while(linea[w].indexOf(htmlOriginal[k]) < 0){	
 						w = w + 1;
 					}
-				}catch(e){
-					paralelo[k] = 'NN';
+				}catch(e){					
 					w = lineaAnterior;
+					paralelo[k] = w+1;
 				}
 				// if it matches the value of w is added to the parallel arrangement / si coincide se agrega el valor de w al arreglo paralelo
 				if(linea[w].indexOf(htmlOriginal[k]) >= 0){
